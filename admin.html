@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin-Terminal</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #0f0;
+            font-family: monospace;
+            text-align: center;
+            margin: 0; padding: 20px;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+            border: none;
+        }
+        #userList {
+            max-height: 400px;
+            overflow-y: scroll;
+            text-align: left;
+            background: black;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .userItem {
+            border-bottom: 1px solid #444;
+            padding: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin-Terminal</h1>
+    <p>Hier kannst du später Konten verwalten (funktionalität noch ausbauen).</p>
+
+    <button onclick="showUsers()">Alle Nutzer anzeigen</button>
+
+    <div id="userList"></div>
+
+    <script>
+        function showUsers() {
+            const users = Object.keys(localStorage).filter(k => !k.startsWith('admin'));
+            const container = document.getElementById('userList');
+            container.innerHTML = '';
+
+            if (users.length === 0) {
+                container.textContent = 'Keine Nutzer gefunden.';
+                return;
+            }
+
+            users.forEach(u => {
+                const data = JSON.parse(localStorage.getItem(u));
+                const div = document.createElement('div');
+                div.className = 'userItem';
+                div.textContent = `Benutzername: ${u}, Anzeigename: ${data.name}, Legal: L${data.legal}@, Illegal: iL${data.illegal}@, Verwarnungen: ${data.warns}`;
+                container.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>
