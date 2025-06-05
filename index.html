@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <title>Amir-Punkte</title>
+    <style>
+        body {
+            background-color: orange;
+            font-family: Arial, sans-serif;
+            color: white;
+            text-align: center;
+            margin: 0; padding: 0;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        input, button {
+            margin: 8px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+        }
+        input {
+            width: 200px;
+        }
+        button {
+            background-color: white;
+            color: orange;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Amir-Punkte</h1>
+
+        <h2>Login</h2>
+        <input type="text" id="login_user" placeholder="Benutzername" /><br />
+        <input type="password" id="login_pass" placeholder="Passwort" /><br />
+        <button onclick="login()">Einloggen</button>
+
+        <h2>Registrieren</h2>
+        <input type="text" id="reg_user" placeholder="Benutzername" /><br />
+        <input type="text" id="reg_name" placeholder="Anzeigename (echter Name)" /><br />
+        <input type="password" id="reg_pass" placeholder="Passwort (min. 4 Zeichen)" /><br />
+        <button onclick="register()">Registrieren</button>
+    </div>
+
+    <script>
+        // Nutzer-Daten werden in localStorage gespeichert (für Demo)
+        // Später kann man auf Backend/DB upgraden
+
+        function register() {
+            const user = document.getElementById('reg_user').value.trim();
+            const name = document.getElementById('reg_name').value.trim();
+            const pass = document.getElementById('reg_pass').value;
+
+            if (!user || !name || pass.length < 4) {
+                alert('Bitte alle Felder korrekt ausfüllen. Passwort mind. 4 Zeichen!');
+                return;
+            }
+            if (localStorage.getItem(user)) {
+                alert('Benutzername existiert schon!');
+                return;
+            }
+
+            const data = {
+                name: name,
+                pass: pass,
+                legal: 30,      // Starterbonus
+                illegal: 0,
+                vip: false,
+                premium: false,
+                warns: 0,
+                lastClickTimes: {}, // für Knopf-Timer
+            };
+            localStorage.setItem(user, JSON.stringify(data));
+            alert('Registrierung erfolgreich! Du kannst dich jetzt einloggen.');
+        }
+
+        function login() {
+            const user = document.getElementById('login_user').value.trim();
+            const pass = document.getElementById('login_pass').value;
+
+            if (!user || pass.length < 4) {
+                alert('Bitte Benutzername und Passwort eingeben!');
+                return;
+            }
+
+            const userData = localStorage.getItem(user);
+            if (!userData) {
+                alert('Benutzername nicht gefunden!');
+                return;
+            }
+
+            const data = JSON.parse(userData);
+
+            if (data.pass !== pass) {
+                alert('Falsches Passwort!');
+                return;
+            }
+
+            if (user === 'Adminamirphilipp' && pass === 'Adminamirphilipp') {
+                window.location.href = 'admin.html';
+            } else {
+                alert(`Login erfolgreich! Willkommen ${data.name}`);
+                // Hier könnte man zur Kontoseite weiterleiten (später ausbauen)
+            }
+        }
+    </script>
+</body>
+</html>
